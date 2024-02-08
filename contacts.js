@@ -9,9 +9,9 @@ console.log(contactsPath);
 async function listContacts() {
 	try {
 		const data = await fs.readFile(contactsPath);
-		const contacts = await JSON.parse(data);
+		const contacts = JSON.parse(data);
 
-		await console.table(contacts);
+		console.table(contacts);
 	} catch (error) {
 		console.log(error.message);
 	}
@@ -20,11 +20,10 @@ async function listContacts() {
 async function getContactById(contactId) {
 	try {
 		const resp = await fs.readFile(contactsPath);
-		const data = await JSON.parse(resp);
+		const data = JSON.parse(resp);
 		const contact =
-			(await data.find((contact) => contact.id === contactId)) ||
-			(await "\n Not found \n");
-		await console.log(contact);
+			data.find((contact) => contact.id === contactId) || "\n Not found \n";
+		console.log(contact);
 	} catch (error) {
 		console.log(error.message);
 	}
@@ -33,19 +32,19 @@ async function getContactById(contactId) {
 async function removeContact(contactId) {
 	try {
 		const resp = await fs.readFile(contactsPath);
-		const data = await JSON.parse(resp);
-		const isInArray = await data.findIndex((item) => item.id === contactId);
+		const data = JSON.parse(resp);
+		const isInArray = data.findIndex((item) => item.id === contactId);
 		if (isInArray === -1) {
 			console.log("\n There is not contact with this id \n");
 		}
-		const array = await data.filter((contact) => contact.id !== contactId);
+		const array = data.filter((contact) => contact.id !== contactId);
 
 		try {
 			await fs.writeFile(contactsPath, JSON.stringify(array));
-			await console.table(array);
-			console.log(` \n Kontakt został pomyślnie usunięty. \n`);
+			console.table(array);
+			console.log(` \n The contact has been successfully deleted. \n`);
 		} catch (error) {
-			console.error(` \n Błąd podczas usuwania kontaktu: ${err.message} \n`);
+			console.error(` \n Error deleting contact: ${err.message} \n`);
 		}
 	} catch (error) {
 		console.log(error.message);
@@ -55,8 +54,8 @@ async function removeContact(contactId) {
 async function addContact(name, email, phone) {
 	try {
 		const resp = await fs.readFile(contactsPath);
-		const data = await JSON.parse(resp);
-		const array = await data.concat({
+		const data = JSON.parse(resp);
+		const array = data.concat({
 			id: nanoid(),
 			name,
 			email,
@@ -64,10 +63,10 @@ async function addContact(name, email, phone) {
 		});
 		try {
 			await fs.writeFile(contactsPath, JSON.stringify(array));
-			await console.table(array);
-			console.log(` \n Dane zostały pomyślnie zapisane do pliku. \n`);
+			console.table(array);
+			console.log(` \n The data has been successfully written to the file. \n`);
 		} catch (error) {
-			console.error(` \n Błąd podczas zapisywania do pliku: ${err.message} \n`);
+			console.error(` \n Error writing to file: ${err.message} \n`);
 		}
 	} catch (error) {
 		console.log(error.message);
